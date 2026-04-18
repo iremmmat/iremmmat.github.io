@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An interactive scroll journey through the hidden cost of fast fashion. Discover what lies buried beneath overconsumption.">
+  <meta name="theme-color" content="#050505">
+  <title>Buried in Plain Sight — The Hidden Cost of Fast Fashion</title>
+
+  <!-- Preconnect for fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/scenes.css">
+
+  <!-- Preload critical images -->
+  <link rel="preload" as="image" href="assets/images/scene1_forest.png">
+</head>
+<body>
+
+  <!-- ============================================
+       Scroll Progress Bar
+       ============================================ -->
+  <div class="progress-bar" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+  <!-- ============================================
+       Scene Navigation Dots
+       ============================================ -->
+  <nav class="scene-nav" id="sceneNav" aria-label="Scene navigation">
+    <button class="scene-nav__dot active" data-scene="0" aria-label="Scene 1: Attraction" title="The Forest"></button>
+    <button class="scene-nav__dot" data-scene="1" aria-label="Scene 2: Curiosity" title="Look Closer"></button>
+    <button class="scene-nav__dot" data-scene="2" aria-label="Scene 3: Discomfort" title="The Truth"></button>
+    <button class="scene-nav__dot" data-scene="3" aria-label="Scene 4: Realization" title="The Weight"></button>
+    <button class="scene-nav__dot" data-scene="4" aria-label="Scene 5: Take Action" title="Your Choice"></button>
+  </nav>
+
+  <!-- ============================================
+       Micro-Pause Indicator
+       ============================================ -->
+  <div class="pause-indicator" id="pauseIndicator" aria-hidden="true">
+    <div class="pause-indicator__dot"></div>
+    <span class="pause-indicator__text">Reading...</span>
+  </div>
+
+  <!-- ============================================
+       JOURNEY (Scenes 1-5) 
+       Wrapped in a sticky container for smooth handoff 
+       to post-journey sections. 
+       ============================================ -->
+  <div class="journey-container" id="journeyContainer">
+    <div class="scene-viewport" id="viewport">
+
+    <!-- ==========================================
+         SCENE 1: ATTRACTION — The Beautiful Forest
+         ========================================== -->
+    <section class="scene is-visible" id="scene-attraction" aria-label="Scene 1: Attraction">
+
+      <div class="scene__background">
+        <img
+          src="assets/images/scene1_forest.png"
+          alt="A mystical forest made of flowing emerald fabric, bathed in golden light"
+          class="scene__bg-img"
+          id="scene1BgImg"
+          loading="eager"
+        >
+      </div>
+
+      <div class="scene__midground">
+        <canvas id="particles1" class="particle-canvas" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="scene__foreground"></div>
+
+      <div class="scene__text">
+        <h1 class="scene__title scene__title--attraction" id="text-attraction">
+          <span class="text-line">Step into</span>
+          <span class="text-line">the forest</span>
+        </h1>
+        <p class="scene__subtitle" id="subtitle-attraction">Scroll to begin your journey</p>
+      </div>
+
+      <div class="scene__overlay scene__overlay--warm"></div>
+    </section>
+
+    <!-- ==========================================
+         SCENE 2: CURIOSITY — Something Feels Off
+         ========================================== -->
+    <section class="scene" id="scene-curiosity" aria-label="Scene 2: Curiosity">
+
+      <div class="scene__background">
+        <img
+          src="assets/images/scene2_fabric.png"
+          alt="A forest revealed to be made of clothing, with visible seams and price tags"
+          class="scene__bg-img"
+          id="scene2BgImg"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="scene__midground">
+        <div class="tag-elements" id="tagElements">
+          <div class="tag" data-delay="0" data-detail="Polyester is made from petroleum. A single polyester garment can take 200+ years to decompose.">100% Polyester</div>
+          <div class="tag" data-delay="1" data-detail="Bangladesh garment workers earn an average of $95/month, working 10-16 hour days in often unsafe conditions.">Made in Bangladesh</div>
+          <div class="tag" data-delay="2" data-detail="At $4.99, someone along the supply chain is paying the real cost — usually the workers and the planet.">$4.99</div>
+          <div class="tag" data-delay="3" data-detail="'Dry Clean Only' labels often deter proper care, leading to garments being discarded earlier than necessary.">Dry Clean Only</div>
+          <div class="tag" data-delay="4" data-detail="'One Size' clothing often fits no one well, increasing the chance it's returned and eventually destroyed unsold.">One Size</div>
+        </div>
+
+        <!-- Hoverable hotspots for layered discovery -->
+        <div class="hotspot" data-reveal="This garment will travel 20,000 km before reaching your closet." style="top: 35%; left: 40%;">
+          <span class="hotspot__pulse" aria-hidden="true"></span>
+        </div>
+        <div class="hotspot" data-reveal="85% of all textiles end up in landfills or are incinerated every year." style="top: 60%; left: 65%;">
+          <span class="hotspot__pulse" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="scene__foreground">
+        <div class="thread thread--1" aria-hidden="true"></div>
+        <div class="thread thread--2" aria-hidden="true"></div>
+        <div class="thread thread--3" aria-hidden="true"></div>
+      </div>
+
+      <div class="scene__text">
+        <h2 class="scene__title scene__title--curiosity" id="text-curiosity">
+          <span class="text-line">Look</span>
+          <span class="text-line">closer</span>
+        </h2>
+        <p class="scene__subtitle" id="subtitle-curiosity">Something isn't quite right</p>
+      </div>
+
+      <div class="scene__overlay scene__overlay--texture"></div>
+
+      <!-- Tag detail tooltip -->
+      <div class="tag-tooltip" id="tagTooltip" aria-hidden="true">
+        <p class="tag-tooltip__text" id="tagTooltipText"></p>
+      </div>
+
+      <!-- Hotspot reveal -->
+      <div class="hotspot-reveal" id="hotspotReveal" aria-hidden="true">
+        <p class="hotspot-reveal__text" id="hotspotRevealText"></p>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCENE 3: DISCOMFORT — The Veil Drops
+         ========================================== -->
+    <section class="scene" id="scene-discomfort" aria-label="Scene 3: Discomfort">
+
+      <div class="scene__background">
+        <img
+          src="assets/images/scene3_piles.png"
+          alt="Mountains of discarded clothing in a barren landscape"
+          class="scene__bg-img"
+          id="scene3BgImg"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="scene__midground">
+        <canvas id="particles3" class="particle-canvas" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="scene__foreground"></div>
+
+      <div class="scene__text">
+        <div class="text-fragments" id="textFragments">
+          <span class="fragment" data-trigger="0.40">"Worn once."</span>
+          <span class="fragment" data-trigger="0.45">"Forgotten."</span>
+          <span class="fragment" data-trigger="0.50">"Still here."</span>
+        </div>
+        <h2 class="scene__title scene__title--discomfort" id="text-discomfort">
+          This is not a forest.
+        </h2>
+      </div>
+
+      <div class="scene__overlay scene__overlay--grain"></div>
+    </section>
+
+    <!-- ==========================================
+         SCENE 4: REALIZATION — The Weight of Numbers
+         ========================================== -->
+    <section class="scene" id="scene-realization" aria-label="Scene 4: Realization">
+
+      <div class="scene__background">
+        <img
+          src="assets/images/scene4_wasteland.png"
+          alt="A vast textile wasteland stretching to the horizon"
+          class="scene__bg-img"
+          id="scene4BgImg"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="scene__midground">
+        <canvas id="particles4" class="particle-canvas" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="scene__foreground">
+        <div class="stats-container" id="statsContainer">
+          <div class="stat" data-trigger="0.62">
+            <span class="stat__number" data-target="92" id="stat1">0</span>
+            <span class="stat__unit">million tonnes</span>
+            <span class="stat__label">of textile waste produced every year.</span>
+          </div>
+          <div class="stat" data-trigger="0.69">
+            <span class="stat__number" data-target="7" id="stat2">0</span>
+            <span class="stat__unit">times</span>
+            <span class="stat__label">— that's how often the average fast fashion garment is worn.</span>
+          </div>
+          <div class="stat" data-trigger="0.76">
+            <span class="stat__number" data-target="1" id="stat3">0</span>
+            <span class="stat__unit">%</span>
+            <span class="stat__label">of all clothing is recycled into new garments.</span>
+          </div>
+          <h2 class="scene__title scene__title--realization" id="text-realization" style="margin-top: clamp(1rem, 2vh, 3rem);">
+            Buried in Plain Sight
+          </h2>
+        </div>
+      </div>
+
+      <div class="scene__overlay scene__overlay--dark"></div>
+    </section>
+
+    <!-- ==========================================
+         SCENE 5: CTA — The Choice
+         ========================================== -->
+    <section class="scene" id="scene-cta" aria-label="Scene 5: Take Action">
+
+      <div class="scene__background scene__background--dark">
+        <img
+          src="assets/images/scene5_garment.png"
+          alt=""
+          class="cta__garment"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="scene__text scene__text--cta">
+        <p class="cta__lead" id="ctaLead">
+          Every piece of clothing you don't buy<br>
+          is waste that never happens.
+        </p>
+
+        <h2 class="cta__title" id="ctaTitle">What will you choose?</h2>
+
+        <div class="cta__buttons" id="ctaButtons">
+          <button class="cta__btn" id="btnWear" data-action="wear">
+            <span class="cta__btn-icon" aria-hidden="true">👕</span>
+            <span class="cta__btn-text">Wear it longer</span>
+          </button>
+          <button class="cta__btn" id="btnBuy" data-action="buy">
+            <span class="cta__btn-icon" aria-hidden="true">✋</span>
+            <span class="cta__btn-text">Buy less</span>
+          </button>
+          <button class="cta__btn" id="btnChoose" data-action="choose">
+            <span class="cta__btn-icon" aria-hidden="true">♻️</span>
+            <span class="cta__btn-text">Choose better</span>
+          </button>
+        </div>
+
+        <div class="cta__confirmation" id="ctaConfirmation">
+          <p class="cta__confirm-text">Thank you. Change starts with awareness.</p>
+        </div>
+      </div>
+
+      <div class="scene__overlay"></div>
+    </section>
+
+    </div>
+    <!-- end .scene-viewport -->
+  </div>
+  <!-- end .journey-container -->
+
+  <!-- ============================================
+       Scroll Hint
+       ============================================ -->
+  <div class="scroll-hint" id="scrollHint" aria-hidden="true">
+    <div class="scroll-hint__mouse">
+      <div class="scroll-hint__wheel"></div>
+    </div>
+    <span class="scroll-hint__text">Scroll to explore</span>
+  </div>
+
+  <!-- ============================================
+       POST-JOURNEY INTERACTIVE SECTIONS
+       (Normal scrollable content below the spacer)
+       ============================================ -->
+
+  <!-- Section transition -->
+  <div class="journey-transition" id="journeyTransition">
+    <div class="journey-transition__line"></div>
+    <p class="journey-transition__text">Continue exploring</p>
+    <div class="journey-transition__arrow">↓</div>
+  </div>
+
+  <!-- ==========================================
+       EXPLORE THE FOREST
+       ========================================== -->
+  <section class="post-section explore" id="explore" aria-label="Explore the Forest">
+    <div class="post-section__inner">
+      <h2 class="post-section__title">Explore the Forest</h2>
+      <p class="post-section__subtitle">Click on each element to uncover what lies beneath</p>
+
+      <div class="explore__progress" id="exploreProgress">
+        <div class="explore__progress-bar">
+          <div class="explore__progress-fill" id="exploreProgressFill"></div>
+        </div>
+        <span class="explore__progress-text" id="exploreProgressText">0 / 8 discovered</span>
+      </div>
+
+      <div class="explore__area" id="exploreForest">
+        <div class="explore__grid"></div>
+
+        <!-- Detail card overlay -->
+        <div class="explore__card" id="exploreCard">
+          <span class="explore__card-icon"></span>
+          <h3 class="explore__card-title"></h3>
+          <p class="explore__card-fact"></p>
+          <button class="explore__card-close" onclick="this.parentElement.classList.remove('explore__card--visible')" aria-label="Close">✕</button>
+        </div>
+      </div>
+
+      <div class="explore__complete" id="exploreComplete">
+        <p class="explore__complete-text">🌟 You've uncovered every hidden truth. Knowledge is the first step to change.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       YOUR WARDROBE IMPACT
+       ========================================== -->
+  <section class="post-section impact" id="impact" aria-label="Your Wardrobe Impact">
+    <div class="post-section__inner">
+      <h2 class="post-section__title">Your Wardrobe Impact</h2>
+      <p class="post-section__subtitle">See the environmental cost of your shopping habits</p>
+
+      <div class="impact__calculator">
+        <label class="impact__question" for="impactSlider">
+          How many clothing items do you buy per month?
+        </label>
+        <div class="impact__slider-container">
+          <input
+            type="range"
+            id="impactSlider"
+            min="0"
+            max="20"
+            value="5"
+            step="1"
+            class="impact__slider"
+          >
+          <div class="impact__slider-value">
+            <span id="impactValue">5</span> items / month
+          </div>
+        </div>
+
+        <div class="impact__results" id="impactResults">
+          <div class="impact__result">
+            <span class="impact__result-icon">💧</span>
+            <span class="impact__result-number">162,000</span>
+            <span class="impact__result-unit">litres of water / year</span>
+            <span class="impact__result-comparison">≈ 1,080 🛁 bathtubs of water</span>
+          </div>
+          <div class="impact__result">
+            <span class="impact__result-icon">☁️</span>
+            <span class="impact__result-number">600</span>
+            <span class="impact__result-unit">kg of CO₂ / year</span>
+            <span class="impact__result-comparison">≈ 2,857 🚗 km driven by car</span>
+          </div>
+          <div class="impact__result">
+            <span class="impact__result-icon">🗑️</span>
+            <span class="impact__result-number">30.0</span>
+            <span class="impact__result-unit">kg of textile waste / year</span>
+            <span class="impact__result-comparison">≈ 8 🗑️ trash bags of textile waste</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       BUILD BETTER — Participation Mechanic
+       ========================================== -->
+  <section class="post-section build" id="build" aria-label="Build Better">
+    <div class="post-section__inner">
+      <h2 class="post-section__title">Build Better</h2>
+      <p class="post-section__subtitle">Choose your actions — watch the forest heal</p>
+
+      <div class="build__container" id="buildBetter">
+        <div class="build__actions"></div>
+
+        <div class="build__forest-container">
+          <div class="build__forest" id="buildForest">
+            <div class="build__forest-ground"></div>
+            <div class="build__forest-tree build__forest-tree--1"></div>
+            <div class="build__forest-tree build__forest-tree--2"></div>
+            <div class="build__forest-tree build__forest-tree--3"></div>
+            <div class="build__forest-tree build__forest-tree--4"></div>
+            <div class="build__forest-tree build__forest-tree--5"></div>
+          </div>
+          <div class="build__health">
+            <div class="build__health-bar">
+              <div class="build__health-fill" id="forestHealthFill"></div>
+            </div>
+            <span class="build__health-label" id="forestHealthLabel">Forest Health: Barren (0%)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="build__commitment" id="commitmentMessage">
+        <p class="build__commitment-text">🌱 You've committed to all four actions. Together, we can restore the balance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       LEARN MORE — Knowledge Section
+       ========================================== -->
+  <section class="post-section learn" id="learn" aria-label="Learn More">
+    <div class="post-section__inner">
+      <div class="learn__divider">
+        <span class="learn__divider-text">Want to learn more?</span>
+      </div>
+
+      <div class="learn__tabs" id="learnMore">
+        <div class="learn__tab-bar">
+          <button class="learn__tab learn__tab--active" data-tab="panel-facts">Fast Fashion Facts</button>
+          <button class="learn__tab" data-tab="panel-lifecycle">Life of a Garment</button>
+          <button class="learn__tab" data-tab="panel-data">Impact Data</button>
+        </div>
+
+        <!-- TAB 1: Fast Fashion Facts -->
+        <div class="learn__panel learn__panel--active" id="panel-facts">
+          <div class="learn__accordion">
+            <button class="learn__accordion-header">
+              <span>What is Fast Fashion?</span>
+              <span class="learn__accordion-icon">+</span>
+            </button>
+            <div class="learn__accordion-body">
+              <p>Fast fashion is a business model that mass-produces trendy clothing at extremely low costs. New styles arrive weekly, encouraging consumers to buy more and discard quickly. Major digital brands add an average of 2,000–6,000 individual styles to their app each day (peaking up to 10,000 during specific periods).</p>
+            </div>
+          </div>
+          <div class="learn__accordion">
+            <button class="learn__accordion-header">
+              <span>The Scale of the Problem</span>
+              <span class="learn__accordion-icon">+</span>
+            </button>
+            <div class="learn__accordion-body">
+              <p>The global fashion industry produces around 100 billion garments annually — roughly 12–13 items for every person on Earth. Studies estimate that 20–30% of this production goes unsold. An estimated 92 million tonnes of textiles end up in landfills each year.</p>
+            </div>
+          </div>
+          <div class="learn__accordion">
+            <button class="learn__accordion-header">
+              <span>The Human Cost</span>
+              <span class="learn__accordion-icon">+</span>
+            </button>
+            <div class="learn__accordion-body">
+              <p>An estimated 75 million people work in the global fashion supply chain, many earning below living wages. The 2013 Rana Plaza factory collapse in Bangladesh killed 1,134 workers, exposing the industry's unsafe conditions. Child labour remains prevalent in cotton farming and garment production.</p>
+            </div>
+          </div>
+          <div class="learn__accordion">
+            <button class="learn__accordion-header">
+              <span>Greenwashing</span>
+              <span class="learn__accordion-icon">+</span>
+            </button>
+            <div class="learn__accordion-body">
+              <p>Many brands use vague terms like "conscious," "eco-friendly," and "sustainable collection" without accountability. Studies show that up to 60% of sustainability claims by fashion brands are misleading. Look for third-party certifications like GOTS, Fair Trade, or B-Corp.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: Life of a Garment -->
+        <div class="learn__panel" id="panel-lifecycle">
+          <div class="learn__timeline">
+            <div class="learn__timeline-item">
+              <div class="learn__timeline-dot"></div>
+              <div class="learn__timeline-content">
+                <h4>1. Raw Materials</h4>
+                <p>Cotton accounts for roughly 2.4% of the world's cultivated land but uses an estimated 4.7% to 6% of the world's pesticides and 16% of insecticides. Synthetic fibres like polyester are derived from fossil fuels and take 200+ years to decompose.</p>
+              </div>
+            </div>
+            <div class="learn__timeline-item">
+              <div class="learn__timeline-dot"></div>
+              <div class="learn__timeline-content">
+                <h4>2. Manufacturing</h4>
+                <p>Textile dyeing uses approximately 1.5 trillion litres of water annually. Chemical runoff from factories pollutes rivers and groundwater in producing countries.</p>
+              </div>
+            </div>
+            <div class="learn__timeline-item">
+              <div class="learn__timeline-dot"></div>
+              <div class="learn__timeline-content">
+                <h4>3. Transportation</h4>
+                <p>A garment may travel 20,000+ km from raw material to your wardrobe — from cotton fields in India, to factories in Bangladesh, to shops in Europe or America.</p>
+              </div>
+            </div>
+            <div class="learn__timeline-item">
+              <div class="learn__timeline-dot"></div>
+              <div class="learn__timeline-content">
+                <h4>4. Use (Average: 7 wears)</h4>
+                <p>The average fast fashion garment is worn just 7 times (an illustrative estimate based on a Barnardo's UK report). Each wash of synthetic clothing releases up to 700,000 microplastic fibres into water systems.</p>
+              </div>
+            </div>
+            <div class="learn__timeline-item">
+              <div class="learn__timeline-dot"></div>
+              <div class="learn__timeline-content">
+                <h4>5. Disposal</h4>
+                <p>Less than 1% of clothing is recycled into new garments. Most ends up in landfills, incinerators, or exported to developing nations where it overwhelms local markets and ecosystems.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: Impact Data -->
+        <div class="learn__panel" id="panel-data">
+          <div class="learn__data-grid">
+            <div class="learn__data-card">
+              <div class="learn__data-bar" style="--bar-height: 92%;">
+                <span class="learn__data-value">92M</span>
+              </div>
+              <span class="learn__data-label">Tonnes of textile waste / year</span>
+            </div>
+            <div class="learn__data-card">
+              <div class="learn__data-bar" style="--bar-height: 80%;">
+                <span class="learn__data-value">10%</span>
+              </div>
+              <span class="learn__data-label">Global carbon emissions from fashion</span>
+            </div>
+            <div class="learn__data-card">
+              <div class="learn__data-bar" style="--bar-height: 70%;">
+                <span class="learn__data-value">20%</span>
+              </div>
+              <span class="learn__data-label">Global water pollution from textiles</span>
+            </div>
+            <div class="learn__data-card">
+              <div class="learn__data-bar" style="--bar-height: 60%;">
+                <span class="learn__data-value">100B</span>
+              </div>
+              <span class="learn__data-label">Garments produced annually</span>
+            </div>
+            <div class="learn__data-card">
+              <div class="learn__data-bar" style="--bar-height: 7%;">
+                <span class="learn__data-value">1%</span>
+              </div>
+              <span class="learn__data-label">Clothing recycled into new garments</span>
+            </div>
+            <div class="learn__data-card">
+              <div class="learn__data-bar" style="--bar-height: 35%;">
+                <span class="learn__data-value">7</span>
+              </div>
+              <span class="learn__data-label">Average wears per garment</span>
+            </div>
+          </div>
+          <p class="learn__sources">Sources: UNEP, Ellen MacArthur Foundation, World Bank, Quantis International</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p class="site-footer__text">Buried in Plain Sight — An awareness experience about the hidden cost of fast fashion</p>
+    <p class="site-footer__credit">Every garment has a story. Make yours worth telling.</p>
+  </footer>
+
+  <!-- ============================================
+       Scripts (order matters)
+       ============================================ -->
+  <script src="js/utils.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/counter.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/explore.js"></script>
+  <script src="js/impact.js"></script>
+  <script src="js/build-better.js"></script>
+  <script src="js/learn-more.js"></script>
+
+  <!-- Initialize post-journey modules -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      new ExploreForest();
+      new ImpactCalculator();
+      new BuildBetter();
+      new LearnMore();
+    });
+  </script>
+
+</body>
+</html>
